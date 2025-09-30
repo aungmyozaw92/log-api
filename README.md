@@ -67,6 +67,32 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
   - `DELETE /{id}` delete
   - `GET /aggregate/by/{severity|source}` aggregated counts
 
+### CSV Export (background job)
+Exports are processed via Redis and RQ.
+
+1) Start Redis locally (default `redis://localhost:6379/0`).
+
+2) Start an RQ worker (macOS-safe non-forking):
+```bash
+source venv/bin/activate
+python run_worker.py
+```
+
+Optionally set the output directory for CSV files (defaults to `/tmp`):
+```bash
+EXPORT_DIR="$(pwd)/exports" python run_worker.py
+```
+
+3) Enqueue an export via API:
+```http
+POST ${API_V1_STR}/logs/export?start=2024-01-01T00:00:00&end=2024-12-31T23:59:59&severity=INFO&source=app
+```
+Response contains `{ job_id }`.
+
+4) Check status/download:
+- Status: `GET ${API_V1_STR}/logs/export/{job_id}`
+- Download: `GET ${API_V1_STR}/logs/export/{job_id}/download`
+
 ### Response format
 All responses use a unified envelope:
 ```json
@@ -96,7 +122,7 @@ source venv/bin/activate
 python run.py
 
 # Seed data
-python -m app.seed --logs 200
+python -m app.seed --logs 100000
 ```
 
 

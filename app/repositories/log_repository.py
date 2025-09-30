@@ -76,5 +76,3 @@ class LogRepository:
         stmt = stmt.group_by(column).order_by(func.count().desc())
         rows = self.db.execute(stmt).all()
         return [{"key": r.key, "count": r.count} for r in rows]
-
-

@@ -1,0 +1,42 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+
+# OS files
+.DS_Store
+
+# Python packaging
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# IDE/editor
+.vscode/
+.idea/
+*.swp
+
+# Databases and dumps
+test.db
+*.db
+*.sqlite3
+*.rdb
+
+# Logs and exports
+exports/
+*.log
+
+# Redis/RQ
+rq*.pid
+
+# Cache
+.cache/
+.pytest_cache/
+
+# Ignore requirements file as requested
+requirements.txt
