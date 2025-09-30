@@ -16,6 +16,20 @@ class UserCreate(BaseModel):
             raise ValueError("username must not contain spaces")
         return v
 
+class UserUpdate(BaseModel):
+    name: Optional[str] = Field(default=None, max_length=100)
+    email: Optional[EmailStr] = None
+    is_active: Optional[bool] = None
+    is_admin: Optional[bool] = None
+
+
+class UserQuery(BaseModel):
+    search: Optional[str] = None
+    status: Optional[bool] = None
+    role_admin: Optional[bool] = None
+    limit: int = Field(default=100, ge=1, le=1000)
+    offset: int = Field(default=0, ge=0)
+
 
 class UserResponse(BaseModel):
     id: int
@@ -25,7 +39,7 @@ class UserResponse(BaseModel):
     is_active: bool
     is_admin: bool
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
     # Allow parsing from SQLAlchemy models
     model_config = ConfigDict(from_attributes=True)

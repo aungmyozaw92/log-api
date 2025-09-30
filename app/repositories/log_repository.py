@@ -32,6 +32,18 @@ class LogRepository:
         stmt = stmt.order_by(Log.timestamp.desc()).limit(limit).offset(offset)
         return list(self.db.execute(stmt).scalars().all())
 
+    def count(self, start: Optional[datetime], end: Optional[datetime], severity: Optional[str], source: Optional[str]) -> int:
+        stmt = select(func.count()).select_from(Log)
+        if start:
+            stmt = stmt.where(Log.timestamp >= start)
+        if end:
+            stmt = stmt.where(Log.timestamp <= end)
+        if severity:
+            stmt = stmt.where(Log.severity == severity)
+        if source:
+            stmt = stmt.where(Log.source == source)
+        return self.db.execute(stmt).scalar() or 0
+
     def update(self, log: Log, severity: Optional[str], source: Optional[str], message: Optional[str]) -> Log:
         if severity is not None:
             log.severity = severity

@@ -14,8 +14,10 @@ class LogService:
     def get(self, log_id: int) -> Optional[Log]:
         return self.repo.get(log_id)
 
-    def list(self, start: Optional[datetime], end: Optional[datetime], severity: Optional[str], source: Optional[str], limit: int, offset: int) -> List[Log]:
-        return self.repo.list(start, end, severity, source, limit, offset)
+    def list(self, start: Optional[datetime], end: Optional[datetime], severity: Optional[str], source: Optional[str], limit: int, offset: int):
+        items = self.repo.list(start, end, severity, source, limit, offset)
+        total = self.repo.count(start, end, severity, source)
+        return {"items": items, "total": total}
 
     def update(self, log_id: int, severity: Optional[str], source: Optional[str], message: Optional[str]) -> Optional[Log]:
         log = self.repo.get(log_id)

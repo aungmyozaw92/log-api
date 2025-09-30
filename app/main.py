@@ -1,18 +1,29 @@
 from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi import HTTPException
 from app.core.database import Base, engine
 import app.models.user
 import app.models.log
-from app.api import auth, logs
+from app.api import auth, logs, users
 from app.core.config import settings
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title=settings.PROJECT_NAME)
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["Auth"])
 app.include_router(logs.router, prefix=f"{settings.API_V1_STR}/logs", tags=["Logs"])
+app.include_router(users.router, prefix=f"{settings.API_V1_STR}/users", tags=["Users"])
 
 @app.get("/")
 async def root():
@@ -43,7 +54,6 @@ async def global_exception_handler(request: Request, exc: Exception):
         "data": None,
     })
 
-
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     # Normalize HTTPException into unified APIResponse
@@ -60,7 +70,6 @@ async def http_exception_handler(request: Request, exc: HTTPException):
         "message": message,
         "data": data,
     })
-
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
