@@ -20,17 +20,13 @@ pip install -r requirements.txt
 ### 4) Configure environment
 Create a `.env` file in the project root (or set env vars another way):
 ```env
-PROJECT_NAME=FastAPI Auth
+PROJECT_NAME=Log Management Rest API
 API_V1_STR=/api/v1
 SECRET_KEY=replace-with-a-random-long-secret
 ACCESS_TOKEN_EXPIRE_MINUTES=60
-DATABASE_URL=sqlite:///./test.db
+DATABASE_URL=postgresql+psycopg2://user:password@localhost:5432/dbname
 DEBUG=true
 ```
-
-Notes:
-- For SQLite, `sqlite:///./test.db` stores a file in the project root.
-- For Postgres: `DATABASE_URL=postgresql+psycopg2://user:password@localhost:5432/dbname`
 
 ### 5) Initialize the database
 Tables are created automatically on app startup. You can start the app once to ensure tables exist:
@@ -122,7 +118,21 @@ source venv/bin/activate
 python run.py
 
 # Seed data
-python -m app.seed --logs 100000
+python -m app.seed --logs 200
 ```
+
+### Testing
+Install test dependencies and run the suite:
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+python -m pytest -q
+```
+What is covered:
+- Health endpoint
+- Logs CRUD and aggregation
+- Auth: register, login (OAuth2 form), profile
+- Users CRUD
+- Export enqueue (Redis queue is mocked)
 
 
