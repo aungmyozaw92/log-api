@@ -1,3 +1,13 @@
+__pycache__/
+*.pyc
+.DS_Store
+venv/
+.env
+*.log
+exports/
+.pytest_cache/
+*.sqlite
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -38,5 +48,3 @@ rq*.pid
 .cache/
 .pytest_cache/
 
-# Ignore requirements file as requested
-requirements.txt

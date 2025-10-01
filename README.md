@@ -4,19 +4,26 @@
 - Python 3.9+
 - Redis (local service or Docker)
 
+### 
+1) Clone the repo
+```bash
+git clone <your-repo-url> log-api
+cd log-api
+```
+
 ### Step-by-step (after cloning)
-1) Create and activate a virtual environment
+2) Create and activate a virtual environment
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
-2) Install dependencies
+3) Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-3) Create a .env file in the project root
+4) Create a .env file in the project root
 ```env
 PROJECT_NAME=Log Management Rest API
 API_V1_STR=/api/v1
@@ -26,29 +33,29 @@ DATABASE_URL=postgresql+psycopg2://user:password@localhost:5432/dbname
 DEBUG=true
 REDIS_URL=redis://localhost:6379/0
 EXPORT_DIR=./exports
+
+```
+5) Seed data
+```bash
+python -m app.seed --admin-password 'Admin@12345' --logs 200
 ```
 
-4) Start Redis
+6) Start Redis
 - macOS (Homebrew): `brew services start redis`
 - Docker alternative: `docker run --name redis -p 6379:6379 -d redis:7-alpine`
 
-5) Run the API server (also initializes DB tables)
+7) Run the API server (also initializes DB tables)
 ```bash
 python run.py
 ```
 
-6) Start the background worker for CSV exports (in a second terminal)
+8) Start the background worker for CSV exports (in a second terminal)
 ```bash
 source venv/bin/activate
 EXPORT_DIR="$(pwd)/exports" python run_worker.py
 ```
 
-7) (Optional) Seed data
-```bash
-python -m app.seed --admin-password 'Admin@12345' --logs 200
-```
-
-8) Use the API
+9) Use the API
 - Docs: http://localhost:8000/docs
 - Health: `GET /health`
 - Auth (prefix `${API_V1_STR}/auth`):
@@ -63,7 +70,7 @@ python -m app.seed --admin-password 'Admin@12345' --logs 200
   - `DELETE /{id}` delete
   - `GET /aggregate/by/{severity|source}` aggregate
 
-9) CSV export workflow
+10) CSV export workflow
 ```http
 POST ${API_V1_STR}/logs/export?start=2024-01-01T00:00:00&end=2024-12-31T23:59:59&severity=INFO&source=app
 ```

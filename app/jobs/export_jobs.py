@@ -31,7 +31,9 @@ def export_logs_csv_job(start: Optional[str], end: Optional[str], severity: Opti
             if not items:
                 break
             for l in items:
-                rows.append([l.id, l.timestamp.isoformat() if l.timestamp else "", l.severity, l.source, l.message])
+                # Format timestamp as YYYY-MM-DD HH:MM:SS
+                timestamp_str = l.timestamp.strftime("%Y-%m-%d %H:%M:%S") if l.timestamp else ""
+                rows.append([timestamp_str, l.severity, l.source, l.message])
             offset += limit
         # write csv to tmp file
         now = datetime.utcnow().strftime("%Y%m%d%H%M%S")
@@ -41,7 +43,7 @@ def export_logs_csv_job(start: Optional[str], end: Optional[str], severity: Opti
         os.makedirs(out_dir, exist_ok=True)
         with open(path, "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow(["id", "timestamp", "severity", "source", "message"])
+            writer.writerow(["timestamp", "severity", "source", "message"])
             writer.writerows(rows)
         return path
     finally:
