@@ -4,7 +4,7 @@
 - Python 3.9+
 - Redis (local service or Docker)
 
-### Step-by-step (after cloning)
+### Step-by-step
 1) Clone the project.
 2) Create and activate a virtual environment
 ```bash
@@ -14,7 +14,6 @@ source venv/bin/activate
 
 3) Install dependencies,
 ```bash
-touch requirements.txt 
 pip install -r requirements.txt
 ```
 
